@@ -1,0 +1,11 @@
+library(shiny)
+library(shinydashboard)
+library(dplyr)
+library(plotly)
+library(tidyverse)
+
+# df = read.csv("base_df.csv", stringsAsFactors = F)
+# df = df %>% select(everything(), -X)
+# 
+# wine_words_filtered = read.csv("wine_words_2.csv", stringsAsFactors = F)
+# wine_words_filtered = wine_words_filtered %>% select(everything(), -X)
