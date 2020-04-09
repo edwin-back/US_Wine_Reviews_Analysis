@@ -5,35 +5,43 @@
 # Define UI for application that draws a histogram
 dashboardPage(skin = "red",
     
-    dashboardHeader(title = "Wine? Wine Not!"),
+    dashboardHeader(title = "Wine? Wine Not!", titleWidth = 225),
     
     dashboardSidebar(
+        width = 225,
         sidebarMenu(
-            menuItem("Data Set", tabName = "dataset", icon = icon("dashboard")),
-            menuItem("Words", tabName = "words"),
-            menuItem("Varieties", tabName = "varieties"),
-            menuItem("Prices", tabName = "prices"),
-            menuItem("Grades", tabName = "grades"),
-            menuItem("Price vs Points", tabName = "versus")
+            menuItem("Get Started", tabName = "started", icon = icon("star")),
+            menuItem("Characteristics", tabName = "words", icon = icon("angle-right")),
+            menuItem("Varieties", tabName = "varieties", icon = icon("angle-right")),
+            menuItem("Wineries", tabName = "wineries", icon = icon("angle-right")),
+            menuItem("Vineyard Designations", tabName = "vineyards", icon = icon("angle-right")),
+            menuItem("Review Scores", tabName = "review_scores", icon = icon("angle-right")),
+            menuItem("Prices", tabName = "prices", icon = icon("angle-right")),
+            menuItem("Prices by Rating", tabName = "ratings", icon = icon("angle-right"))
         )
     ),
     
     dashboardBody(
+        tags$head(
+            tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+            tags$link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Lobster")
+        ),
+
         tabItems(
             # First tab content
-            tabItem(tabName = "dataset", h2("Data Specifications"),
+            tabItem(tabName = "started", h2("Explore the Original Data"), br(),
                 fluidRow(
                     column(6,
-                       infoBoxOutput("countryBox"),
-                       valueBoxOutput("provinceBox"),
-                       valueBoxOutput("regionBox")
+                           valueBoxOutput("countryBox"),
+                           valueBoxOutput("provinceBox"),
+                           valueBoxOutput("regionBox")
                     ),
                     column(6,
-                       valueBoxOutput("varietyBox"),
-                       valueBoxOutput("ratingBox"),
-                       valueBoxOutput("designationBox")
+                           valueBoxOutput("varietyBox"),
+                           valueBoxOutput("ratingBox"),
+                           valueBoxOutput("designationBox")
                     )
-                ),
+                ), br(),
                 # DT INPUTS
                 fluidRow(
                     column(3,
@@ -66,152 +74,207 @@ dashboardPage(skin = "red",
             ),
             
             # WORDS TAB
-            tabItem(tabName = "words", h2("Top Characteristics of U.S. Wines"),
+            tabItem(tabName = "words", h2("Top Characteristics of U.S. Wines"), br(),
                 fluidRow(
                     column(3,
-                       selectizeInput(
-                           inputId = "province2",
-                           label = "Select State",
-                           choices = c('All', unique(df$province))
+                           selectizeInput(inputId = "province2",
+                                          label = "Select State",
+                                          choices = c('All', unique(df$province))
                     )),
                     column(3,
-                        selectizeInput(
-                            inputId = "region2",
-                            label = "Select Region",
-                            choices = c('All', unique(df$region))
+                           selectizeInput(inputId = "region2",
+                                          label = "Select Region",
+                                          choices = c('All', unique(df$region))
                     )),
                     column(3,
-                           selectizeInput(
-                               inputId = "variety2",
-                               label = "Select Variety",
-                               choices = c('All', unique(df$variety))
+                           selectizeInput(inputId = "winery2",
+                                          label = "Select Winery",
+                                          choices = c('All', unique(df$winery))
                     )),
                     column(3,
-                       selectizeInput(
-                           inputId = "winery2",
-                           label = "Select Winery",
-                           choices = c('All', unique(df$winery))
+                           selectizeInput(inputId = "vineyard2",
+                                          label = "Select Vineyard",
+                                          choices = c('All', unique(df$designation))
                     ))
-                ),
+                ), br(),
                 fluidRow(
-                    column(12, plotOutput("words"))
+                    column(12, plotlyOutput("words"))
                 )
             ),
-            # VARIETIES TAB, INPUTS
-            tabItem(tabName = "varieties", h2("Distribution of Top Varieties"),
+            # VARIETIES TAB
+            tabItem(tabName = "varieties", h2("Distribution of Top Varieties"), br(),
                 # Inputs
                 fluidRow(
-                    column(6,
-                        selectizeInput(
-                            inputId = "province3",
-                            label = "Select State",
-                            choices = unique(df[, "province"])
-                    )),
-                    column(6,
-                       selectizeInput(
-                           inputId = "region3",
-                           label = "Select Region",
-                           choices = unique(df[, "region"])
-                    ))
-                ),
-                fluidRow(
-                    column(6,
-                        sliderInput(
-                            inputId = "price3",
-                            label = "Select Price Ceiling",
-                            min = min(df[, "price"]),
-                            max = max(df[, "price"]),
-                            value = median(df[, "price"])
-                        )
+                    column(3,
+                           selectizeInput(
+                               inputId = "province3",
+                               label = "Select State",
+                               choices = c("All", unique(df$province))
+                           ), br(),
+                           selectizeInput(
+                               inputId = "region3",
+                               label = "Select Region",
+                               choices = c("All", unique(df$region))
+                           ), br(),
+                           sliderInput(
+                               inputId = "points3",
+                               label = "Select Review Score Range",
+                               min = min(df$points),
+                               max = max(df$points),
+                               value = c(80, 100),
+                               step = 1
+                           )
                     ),
-                    column(6,
-                       sliderInput(
-                           inputId = "points3",
-                           label = "Select Points Ceiling",
-                           min = min(df[, "points"]),
-                           max = max(df[, "points"]),
-                           value = median(df[, "points"])
-                        )
+                    column(9,
+                           plotlyOutput("varieties")
                     )
-                ),
-                # Plot Output
-                fluidRow(
-                    column(12, plotOutput("varieties"))
                 )
             ),
-            # PRICES TAB 
-            tabItem(tabName = "prices", h2("Price Density of Varieties"),
-                fluidRow(
-                    column(4,
-                        fluidRow(
-                            column(12,
-                                selectizeInput(
-                                    inputId = "province4",
-                                    label = "Select State",
-                                    choices = unique(df[, "province"])
-                                )
-                            )
-                        ),
-                        fluidRow(
-                            column(12,
+            # WINERIES TAB
+            tabItem(tabName = "wineries", h2("Distribution of Top Wineries"), br(),
+                    # Inputs
+                    fluidRow(
+                        column(3,
+                               selectizeInput(
+                                   inputId = "province4",
+                                   label = "Select State",
+                                   choices = c("All", unique(df$province))
+                               ), br(),
                                selectizeInput(
                                    inputId = "region4",
                                    label = "Select Region",
-                                   choices = unique(df[, "region"])
+                                   choices = c("All", unique(df$region))
+                               ), br(),
+                               sliderInput(
+                                   inputId = "points4",
+                                   label = "Select Review Score Range",
+                                   min = min(df$points),
+                                   max = max(df$points),
+                                   value = c(80,100),
+                                   step = 1
                                )
-                            )
                         ),
-                        fluidRow(
-                            column(12,
-                                sliderInput(
-                                    inputId = "price1",
-                                    label = "Select Max Price",
-                                    min = min(df[, "price"]),
-                                    max = max(df[, "price"]),
-                                    value = median(df[, "price"])
-                                )
-                            )
+                        column(9,
+                               plotlyOutput("wineries")
                         )
+                    )
+            ),
+            # VINEYARDS TAB
+            tabItem(tabName = "vineyards", h2("Distribution of Top Vineyard Designations"), br(),
+                    # Inputs
+                    fluidRow(
+                        column(3,
+                               selectizeInput(
+                                   inputId = "province5",
+                                   label = "Select State",
+                                   choices = c("All", unique(df$province))
+                               ), br(),
+                               selectizeInput(
+                                   inputId = "region5",
+                                   label = "Select Region",
+                                   choices = c("All", unique(df$region))
+                               ), br(),
+                               sliderInput(
+                                   inputId = "points5",
+                                   label = "Select Review Score Range",
+                                   min = min(df$points),
+                                   max = max(df$points),
+                                   value = c(80,100),
+                                   step = 1
+                               )
+                        ),
+                        column(9,
+                               plotlyOutput("vineyards")
+                        )
+                    )
+            ),
+            # PRICES
+            tabItem(tabName = "prices", h2("Probability Density of Wine Prices"), br(),
+                fluidRow(
+                    column(3,
+                           selectizeInput(
+                               inputId = "province6",
+                               label = "Select State",
+                               choices = c("All", unique(df$province))
+                           ), br(),
+                           selectizeInput(
+                               inputId = "region6",
+                               label = "Select Region",
+                               choices = c("All", unique(df$region))
+                           ), br(),
+                           selectizeInput(
+                               inputId = "variety6",
+                               label = "Select Variety",
+                               choices = c("All", unique(df$variety))
+                           ), br(),
+                           selectizeInput(
+                               inputId = "rating6",
+                               label = "Select Rating",
+                               choices = c("All", unique(df$rating))
+                           )
                     ),
-                    
-                    column(8, plotOutput("prices"))
+                    column(9,
+                           plotlyOutput("prices")
+                    )
                 )
             ),
-            # GRADES TAB
-            tabItem(tabName = "grades", h2("Overall Wine Grades"),
+            # REVIEW SCORES
+            # INPUTS
+            tabItem(tabName = "review_scores", h2("Frequency Count of Wine Review Scores"), br(),
                 fluidRow(
-                    column(4,
-                        selectizeInput(
-                            inputId = "province5",
-                            label = "Select State",
-                            choices = unique(df[, "province"])
-                        )
+                    column(3,
+                           selectizeInput(
+                               inputId = "province7",
+                               label = "Select State",
+                               choices = c("All", unique(df$province))
+                           ), br(),
+                           selectizeInput(
+                               inputId = "region7",
+                               label = "Select Region",
+                               choices = c("All", unique(df$region))
+                           ), br(),
+                           selectizeInput(
+                               inputId = "variety7",
+                               label = "Select Variety",
+                               choices = c("All", unique(df$variety))
+                           )
                     ),
-                    column(4,
-                       selectizeInput(
-                           inputId = "region5",
-                           label = "Select Region",
-                           choices = unique(df[, "region"])
-                       )
-                    ),
-                    column(4,
-                       selectizeInput(
-                           inputId = "variety5",
-                           label = "Select Variety",
-                           choices = unique(df[, "variety"])
-                       )
-                    )
-                ),
-                fluidRow(
-                    column(12,
-                        plotOutput("gradesLoc")
+                    column(9,
+                           plotlyOutput("review_scores")
                     )
                 )
             ),
-            # PVP TAB
-            tabItem(tabName = "versus", h2("Price VS Ratings"),
+            # RATINGS
+            tabItem(tabName = "ratings", h2("Price Distribution of Wine Ratings"), br(),
                 fluidRow(
-                    column(12, plotlyOutput("pvp"))
+                    column(3,
+                           selectizeInput(
+                               inputId = "province8",
+                               label = "Select State",
+                               choices = c("All", unique(df$province))
+                           ), br(),
+                           selectizeInput(
+                               inputId = "region8",
+                               label = "Select Region",
+                               choices = c("All", unique(df$region))
+                           ), br(),
+                           selectizeInput(
+                               inputId = "variety8",
+                               label = "Select Variety",
+                               choices = c("All", unique(df$variety))
+                           ), br(),
+                           tags$ol(
+                               tags$li("Classic: 98 - 100 points"), 
+                               tags$li("Superb: 94 - 97 points"), 
+                               tags$li("Excellent: 90 - 93 points"),
+                               tags$li("Very Good: 87 - 89 points"), 
+                               tags$li("Good: 83 - 86 points"),
+                               tags$li("Acceptable: 80 - 82 points")
+                           )
+                    ),
+                    column(9,
+                           plotlyOutput("ratings")
+                    )
                 )
             )
         )

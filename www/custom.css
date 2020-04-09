@@ -1,0 +1,14 @@
+.main-header .header {
+	background-color: #9D222A;
+}
+
+.main-header .logo {
+  font-family: "Lobster", verdana;
+  font-weight: bold;
+  font-size: 26px;
+}
+
+.content-wrapper,
+.right-side {
+  background-color: #F5F5F5;
+}
