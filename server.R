@@ -504,7 +504,7 @@ shinyServer(
                 zerolinecolor = 'rgb(204, 204, 204)',
                 zerolinewidth = 1
             )
-            m <- list(l = 15, r = 15, b = 50, t = 25, pad = 2)
+            m <- list(l = 5, r = 5, b = 100, t = 25, pad = 3)
             
             plot_ly(
                 top_words_filtered(),
@@ -1151,9 +1151,10 @@ shinyServer(
             m <- list(l = 10, r = 10, b = 100, t = 100, pad = 3)
             
             densityplot = density(price_density()$price)
-            
-            fig <- plot_ly(x = ~round(densityplot$x, 2), y = ~densityplot$y, type = 'scatter', mode = 'lines', fill = 'tozeroy',
+
+            fig <- plot_ly(x = ~densityplot$x, y = ~densityplot$y, type = 'scatter', mode = 'lines', fill = 'tozeroy', name = "Probability Density",
                            fillcolor = 'rgba(204,235,197,0.7)', line = list(width = 2, color = 'rgba(255, 77, 77, 0.7)'), height = 600)
+            
             fig <- fig %>%
                 layout(
                     title = 'Price Density by Geographical Region, Variety & Rating',
@@ -1336,7 +1337,9 @@ shinyServer(
             )
             m <- list(l = 50, r = 25, b = 100, t = 100, pad = 3)
             
-            fig <- plot_ly(score_reviews(), x = ~points, type = 'histogram', height = 600, alpha = 0.7)
+            fig <- plot_ly(score_reviews(), x = ~points, type = 'histogram', height = 600, alpha = 0.7, marker = list(color = "#EA2F3B",
+                                                                                                                      line = list(color = "f2f2f2",
+                                                                                                                                  width = 2)))
             fig <- fig %>%
                 layout(
                     title = 'Score Distribution by Geographical Region & Variety',
