@@ -1,5 +1,3 @@
 rsconnect/
-
-*.Rhistory
-
-*.csv
+.DS_Store
+.Rhistory
