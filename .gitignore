@@ -1,2 +1,5 @@
 rsconnect/
+
 *.Rhistory
+
+*.csv

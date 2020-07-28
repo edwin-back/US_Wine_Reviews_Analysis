@@ -1,16 +1,13 @@
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-
-# Define UI for application that draws a histogram
+# Application UI Top Level
 dashboardPage(skin = "red",
-    
+    # Header
     dashboardHeader(title = "Wine? Wine Not!", titleWidth = 225),
-    
+    # Sidebar
     dashboardSidebar(
         width = 225,
         sidebarMenu(
             menuItem("Get Started", tabName = "started", icon = icon("star")),
+            menuItem("Explore Data", tabName = "data", icon = icon("angle-right")),
             menuItem("Characteristics", tabName = "words", icon = icon("angle-right")),
             menuItem("Varieties", tabName = "varieties", icon = icon("angle-right")),
             menuItem("Wineries", tabName = "wineries", icon = icon("angle-right")),
@@ -20,16 +17,48 @@ dashboardPage(skin = "red",
             menuItem("Prices by Rating", tabName = "ratings", icon = icon("angle-right"))
         )
     ),
-    
+    # Body
     dashboardBody(
         tags$head(
             tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
-            tags$link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Lobster")
+            tags$link(rel = "stylesheet", href="https://fonts.googleapis.com/css?family=Lobster")
         ),
-
         tabItems(
-            # First tab content
-            tabItem(tabName = "started", h2("Explore the Original Data"), br(),
+            tabItem(tabName = "started",
+                    fluidRow(
+                        box(title = "About the Author",
+                            status = "warning",
+                            solidHeader = TRUE,
+                            collapsible = TRUE,
+                            background = "light-blue",
+                            column(12, align = "center", br(),
+                                   img(src = "BackEdwin4.jpg", width = "45%", height = "auto"), br(),
+                                   h4("Welcome! My name is Edwin Back and I am the creator of this application.
+                                      I graduated from the University of Michigan in 2015 with a bachelor's degree
+                                      in environmental engineering. I then spent two years at a startup developing
+                                      responsive frontend applications with some exposure to UX/UI design principles.
+                                      For the last two years, I was a business data analyst and staff scientist at a
+                                      growing environmental testing firm. After splitting responsibilities between
+                                      sales/marketing data analysis and environmental field sampling analysis, I
+                                      realized that I enjoy working with data to solve complex business problems rather
+                                      than performing routine calculations. In other words, I want to be challenged
+                                      to become a better problem-solver and a respected professional in the data science
+                                      industry.", align = "left")
+                            )
+                        ),
+                        box(title = "Product Overview",
+                            status = "warning",
+                            solidHeader = TRUE,
+                            collapsible = TRUE,
+                            background = "light-blue",
+                            column(12, align = "center",
+                                   h4("Here is the first sentence of the overview", align = "left")
+                            )
+                        )
+                    )
+            ),
+            # Data Table Tab
+            tabItem(tabName = "data", h2("Explore the Original Data"), br(),
                 fluidRow(
                     column(6,
                            valueBoxOutput("countryBox"),
